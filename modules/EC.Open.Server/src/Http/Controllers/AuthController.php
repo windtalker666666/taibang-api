@@ -16,6 +16,7 @@ use GuoJiangClub\Component\User\Repository\UserRepository;
 use GuoJiangClub\EC\Open\Core\Auth\User;
 use GuoJiangClub\Component\User\UserService;
 use iBrand\Sms\Facade as Sms;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -47,14 +48,14 @@ class AuthController extends Controller
             $user = $this->userRepository->create(['mobile' => $mobile]);
             $is_new = true;
         }
-
+        Log::debug(["is_new" => $is_new]);
         if (User::STATUS_FORBIDDEN == $user->status) {
             return $this->failed('您的账号已被禁用，联系网站管理员或客服！');
         }
 
         //1. create user token.
         $token = $user->createToken($mobile)->accessToken;
-
+        Log::debug(["token" => $token]);
         //2. bind user bind data to user.
         $this->userService->bindPlatform($user->id, request('open_id'), config('ibrand.wechat.mini_program.default.app_id'), 'miniprogram');
 
