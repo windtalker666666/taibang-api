@@ -54,7 +54,9 @@ class AuthController extends Controller
         }
 
         //1. create user token.
+        Log::debug(["111111"]);
         $token = $user->createToken($mobile)->accessToken;
+        Log::debug(["222222"]);
         Log::debug(["token" => $token]);
         //2. bind user bind data to user.
         $this->userService->bindPlatform($user->id, request('open_id'), config('ibrand.wechat.mini_program.default.app_id'), 'miniprogram');
